@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import utez.edu.mx.systemris.doctor.model.Doctor;
 import utez.edu.mx.systemris.doctor.model.DoctorDto;
@@ -15,8 +16,10 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class DoctorService {
     private static final Logger logger = LoggerFactory.getLogger(DoctorService.class);
+
     private final DoctorRepository doctorRepository;
 
     public DoctorService(DoctorRepository doctorRepository) {
