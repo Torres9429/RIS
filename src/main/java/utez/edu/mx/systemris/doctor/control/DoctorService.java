@@ -92,6 +92,7 @@ public class DoctorService {
         doctor.setNombre(dto.getNombre());
         doctor.setApellidos(dto.getApellidos());
         doctor.setCedula(dto.getCedula());
+        doctor.setEspecialidad(dto.getEspecialidad());
         doctor.setConsultorio(dto.getConsultorio());
         doctor = doctorRepository.saveAndFlush(doctor);
         if(doctor == null){
