@@ -56,7 +56,8 @@ public class FacturaService {
         if (medicamento == null) {
             return new ResponseEntity<>(new Message(null, "Medicamento no encontrado", TypesResponse.ERROR), HttpStatus.BAD_REQUEST);
         }
-        Factura factura = new Factura(facturaDto.getConcepto(),facturaDto.getTotal(), List.of(medicamento));
+        //Factura factura = new Factura(facturaDto.getConcepto(),facturaDto.getTotal(), List.of(medicamento));
+        Factura factura = new Factura(facturaDto.getConcepto(),facturaDto.getTotal(),medicamento);
         facturaRepository.save(factura);
         logger.info("Factura registrada correcatamente");
         return new ResponseEntity<>(new Message(factura, "Factura guardada correctamente", TypesResponse.SUCCESS), HttpStatus.OK);

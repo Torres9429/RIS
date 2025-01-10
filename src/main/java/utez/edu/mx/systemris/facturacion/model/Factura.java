@@ -20,14 +20,37 @@ public class Factura {
     private double total;
     @Column(name = "concepto", columnDefinition = "VARCHAR(50)")
     private String concepto;
-    @OneToMany(mappedBy = "factura", cascade = CascadeType.ALL)
+    /*@OneToMany(mappedBy = "factura", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Medicamento> medicamentos;
+    private List<Medicamento> medicamentos;*/
+    @ManyToOne
+    @JoinColumn(name = "medicamento_id", referencedColumnName = "id")
+    private Medicamento medicamentos;
 
     public Factura() {
     }
 
-    public Factura(Long id, Date fecha_factura, double total, List<Medicamento> medicamentos) {
+    public Factura(Long id, Date fecha_factura, double total, String concepto, Medicamento medicamentos) {
+        this.id = id;
+        this.fecha_factura = fecha_factura;
+        this.total = total;
+        this.concepto = concepto;
+        this.medicamentos = medicamentos;
+    }
+
+    public Factura(double total, String concepto, Medicamento medicamentos) {
+        this.total = total;
+        this.concepto = concepto;
+        this.medicamentos = medicamentos;
+    }
+
+    public Factura(String concepto, double total, Medicamento medicamentos) {
+        this.total = total;
+        this.fecha_factura = new Date();
+        this.concepto = concepto;
+        this.medicamentos = medicamentos;
+    }
+    /*public Factura(Long id, Date fecha_factura, double total, List<Medicamento> medicamentos) {
         this.id = id;
         this.fecha_factura = fecha_factura;
         this.total = total;
@@ -45,7 +68,7 @@ public class Factura {
         this.concepto = concepto;
         this.total = total;
         this.medicamentos = medicamentos;
-    }
+    }*/
 
     public Long getId() {
         return id;
@@ -79,12 +102,19 @@ public class Factura {
         this.concepto = concepto;
     }
 
-    public List<Medicamento> getMedicamentos() {
+    /*public List<Medicamento> getMedicamentos() {
         return medicamentos;
     }
 
     public void setMedicamentos(List<Medicamento> medicamentos) {
         this.medicamentos = medicamentos;
+    }*/
+
+    public Medicamento getMedicamentos() {
+        return medicamentos;
     }
 
+    public void setMedicamentos(Medicamento medicamentos) {
+        this.medicamentos = medicamentos;
+    }
 }

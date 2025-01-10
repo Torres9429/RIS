@@ -23,9 +23,12 @@ public class Medicamento {
     @OneToMany(mappedBy = "medicamentos")
     @JsonIgnore
     private List<Insumo> insumos;
-    @ManyToOne
+    /*@ManyToOne
     @JoinColumn(name = "factura_id", referencedColumnName = "id")
-    private Factura factura;
+    private Factura factura;*/
+    @OneToMany(mappedBy = "medicamentos")
+    @JsonIgnore
+    private List<Factura> factura;
 
     public Medicamento(Long id, String medicamento, String descripcion, Double precio) {
         this.id = id;
@@ -40,7 +43,16 @@ public class Medicamento {
         this.descripcion = descripcion;
     }
 
-    public Medicamento(Long id, String medicamento, Double precio, String descripcion, List<Insumo> insumos, Factura factura) {
+    /*public Medicamento(Long id, String medicamento, Double precio, String descripcion, List<Insumo> insumos, Factura factura) {
+        this.id = id;
+        this.medicamento = medicamento;
+        this.precio = precio;
+        this.descripcion = descripcion;
+        this.insumos = insumos;
+        this.factura = factura;
+    }*/
+
+    public Medicamento(Long id, String medicamento, Double precio, String descripcion, List<Insumo> insumos, List<Factura> factura) {
         this.id = id;
         this.medicamento = medicamento;
         this.precio = precio;
@@ -89,12 +101,28 @@ public class Medicamento {
     public void setPrecio(Double precio) {
         this.precio = precio;
     }
-    public void setFactura(Factura factura) {
+    /*public void setFactura(Factura factura) {
         this.factura = factura;
     }
 
     public Factura getFactura() {
         return factura;
+    }*/
+
+    public List<Insumo> getInsumos() {
+        return insumos;
+    }
+
+    public void setInsumos(List<Insumo> insumos) {
+        this.insumos = insumos;
+    }
+
+    public List<Factura> getFactura() {
+        return factura;
+    }
+
+    public void setFactura(List<Factura> factura) {
+        this.factura = factura;
     }
 }
 
