@@ -1,5 +1,6 @@
 package utez.edu.mx.systemris.facturacion.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import utez.edu.mx.systemris.medicamento.model.Medicamento;
 
@@ -17,7 +18,10 @@ public class Factura {
     private Date fecha_factura;
     @Column(name = "total", columnDefinition = "DOUBLE")
     private double total;
-    @OneToMany(mappedBy = "factura", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Column(name = "concepto", columnDefinition = "VARCHAR(50)")
+    private String concepto;
+    @OneToMany(mappedBy = "factura", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Medicamento> medicamentos;
 
     public Factura() {
@@ -32,6 +36,12 @@ public class Factura {
 
     public Factura(Date fecha_factura, double total, List<Medicamento> medicamentos) {
         this.fecha_factura = fecha_factura;
+        this.total = total;
+        this.medicamentos = medicamentos;
+    }
+
+    public Factura(String concepto, double total, List<Medicamento> medicamentos) {
+        this.concepto = concepto;
         this.total = total;
         this.medicamentos = medicamentos;
     }
@@ -60,11 +70,20 @@ public class Factura {
         this.total = total;
     }
 
-    public List<Medicamento> getMedicamento() {
+    public String getConcepto() {
+        return concepto;
+    }
+
+    public void setConcepto(String concepto) {
+        this.concepto = concepto;
+    }
+
+    public List<Medicamento> getMedicamentos() {
         return medicamentos;
     }
 
-    public void setMedicamento(List<Medicamento> medicamentos) {
+    public void setMedicamentos(List<Medicamento> medicamentos) {
         this.medicamentos = medicamentos;
     }
+
 }

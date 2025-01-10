@@ -52,11 +52,11 @@ public class FacturaService {
         if (facturaDto.getConcepto().length() > 50) {
             return new ResponseEntity<>(new Message(facturaDto, "El concepto sobrepasa el número de caracteres", TypesResponse.WARNING), HttpStatus.BAD_REQUEST);
         }
-        Medicamento medicamento = medicamentoRepository.findById(facturaDto.getFacturaId()).orElse(null);
+        Medicamento medicamento = medicamentoRepository.findById(facturaDto.getMedicamentoId()).orElse(null);
         if (medicamento == null) {
             return new ResponseEntity<>(new Message(null, "Medicamento no encontrado", TypesResponse.ERROR), HttpStatus.BAD_REQUEST);
         }
-        Factura factura = new Factura(facturaDto.getFecha_factura(), facturaDto.getTotal(), List.of(medicamento));
+        Factura factura = new Factura(facturaDto.getConcepto(),facturaDto.getTotal(), List.of(medicamento));
         facturaRepository.save(factura);
         logger.info("Factura registrada correcatamente");
         return new ResponseEntity<>(new Message(factura, "Factura guardada correctamente", TypesResponse.SUCCESS), HttpStatus.OK);

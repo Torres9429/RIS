@@ -16,8 +16,8 @@ public class FacturaDto {
     private String concepto;
     @NotNull(groups = {Register.class,Modify.class},message = "El total no puede quedar vacío")
     private double total;
-    @NotNull(groups = {Register.class, Modify.class}, message = "El id de la factura no puede quedar vacío")
-    private Long facturaId;
+    @NotNull(groups = {Register.class, Modify.class}, message = "El id del medicamento no puede quedar vacío")
+    private Long medicamentoId;
     public FacturaDto() {
     }
 
@@ -52,11 +52,13 @@ public class FacturaDto {
     public void setTotal(double total) {
         this.total = total;
     }
-    public Long getFacturaId() {
-        return facturaId;
+
+    public Long getMedicamentoId() {
+        return medicamentoId;
     }
-    public void setFacturaId(Long facturaId) {
-        this.facturaId = facturaId;
+
+    public void setMedicamentoId(Long medicamentoId) {
+        this.medicamentoId = medicamentoId;
     }
 
     public interface Register{}

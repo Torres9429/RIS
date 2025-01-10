@@ -24,7 +24,7 @@ public class Medicamento {
     @JsonIgnore
     private List<Insumo> insumos;
     @ManyToOne
-    @JoinColumn(name = "factura_id", nullable = false)
+    @JoinColumn(name = "factura_id", referencedColumnName = "id")
     private Factura factura;
 
     public Medicamento(Long id, String medicamento, String descripcion, Double precio) {
@@ -38,6 +38,15 @@ public class Medicamento {
         this.medicamento = medicamento;
         this.precio = precio;
         this.descripcion = descripcion;
+    }
+
+    public Medicamento(Long id, String medicamento, Double precio, String descripcion, List<Insumo> insumos, Factura factura) {
+        this.id = id;
+        this.medicamento = medicamento;
+        this.precio = precio;
+        this.descripcion = descripcion;
+        this.insumos = insumos;
+        this.factura = factura;
     }
 
     public Medicamento() {
@@ -79,6 +88,13 @@ public class Medicamento {
 
     public void setPrecio(Double precio) {
         this.precio = precio;
+    }
+    public void setFactura(Factura factura) {
+        this.factura = factura;
+    }
+
+    public Factura getFactura() {
+        return factura;
     }
 }
 
