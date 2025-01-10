@@ -1,9 +1,10 @@
 package utez.edu.mx.systemris.enfermera.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import utez.edu.mx.systemris.turno.model.Turno;
+
+import java.util.List;
 
 @Entity
 @Table(name = "enfermeras")
@@ -12,28 +13,24 @@ public class Enfermera {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "El nombre es obligatorio")
     @Column(name = "nombre", columnDefinition = "VARCHAR(70)")
     private String nombre;
 
-    @NotBlank(message = "Los apellidos son obligatorios")
     @Column(name = "apellidos", columnDefinition = "VARCHAR(70)")
     private String apellidos;
 
-    @NotBlank(message = "El área de trabajo es obligatoria")
     @Column(name = "areaTrabajo", columnDefinition = "VARCHAR(70)")
     private String areaTrabajo;
 
-    @NotNull(message = "El tiempo de experiencia es obligatorio")
     @Column(name = "aniosExperiencia", columnDefinition = "INT")
     private int aniosExperiencia;
 
     @Column(name = "status", columnDefinition = "BOOL DEFAULT TRUE")
-    private boolean status = true;
+    private boolean status;
 
-    @ManyToOne
-    @JoinColumn(name = "turno_id")
-    private Turno turno;
+    @OneToMany(mappedBy = "enfermeras")
+    @JsonIgnore
+    private List<Turno> turnos;
 
     public Enfermera() {
     }

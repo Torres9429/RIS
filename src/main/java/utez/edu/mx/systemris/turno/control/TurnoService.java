@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import utez.edu.mx.systemris.doctor.model.Doctor;
 import utez.edu.mx.systemris.doctor.model.DoctorRepository;
 import utez.edu.mx.systemris.enfermera.model.Enfermera;
 import utez.edu.mx.systemris.enfermera.model.EnfermeraRepository;
@@ -21,7 +22,7 @@ import java.util.Optional;
 
 @Service
 public class TurnoService {
-    private static final Logger logger = LoggerFactory.getLogger(TurnoService.class);
+    Logger logger = LoggerFactory.getLogger(TurnoService.class);
     private final TurnoRepository turnoRepository;
     private final DoctorRepository doctorRepository;
     private final EnfermeraRepository enfermeraRepository;
@@ -52,7 +53,28 @@ public class TurnoService {
 
     @Transactional(rollbackFor = {SQLException.class})
     public ResponseEntity<Message> save(TurnoDto dto) {
-        Turno turno = new Turno(dto.getTurno(), true);
+        if(dto.getTurno().length() > 20) {
+            return new ResponseEntity<>(new Message("El turno excede el número de caracteres", TypesResponse.WARNING), HttpStatus.BAD_REQUEST);
+        }
+        if (dto.getEnfermeraId() == null) {
+            return new ResponseEntity<>(new Message("El ID de la enfermera no puede ser nulo", TypesResponse.WARNING), HttpStatus.BAD_REQUEST);
+        }
+        if (dto.getDoctorId() == null) {
+            return new ResponseEntity<>(new Message("El ID del doctor no puede ser nulo", TypesResponse.WARNING), HttpStatus.BAD_REQUEST);
+        }
+
+        Enfermera enfermera = enfermeraRepository.findById(dto.getEnfermeraId()).orElse(null);
+        if (enfermera == null) {
+            return new ResponseEntity<>(new Message("Enfermera del turno no encontrada", TypesResponse.WARNING), HttpStatus.BAD_REQUEST);
+        }
+        Doctor doctor = doctorRepository.findById(dto.getDoctorId()).orElse(null);
+        if (doctor == null) {
+            return new ResponseEntity<>(new Message("Doctor del turno no encontrada", TypesResponse.WARNING), HttpStatus.BAD_REQUEST);
+        }
+
+        Turno turno = new Turno(dto.getTurno(),true);
+        turno.setEnfermeras(enfermera);
+        turno.setDoctores(doctor);
         turno = turnoRepository.saveAndFlush(turno);
         if(turno == null){
             return new ResponseEntity<>(new Message("El turno no se registró",TypesResponse.ERROR),HttpStatus.BAD_REQUEST);
@@ -67,8 +89,13 @@ public class TurnoService {
         if(!turnoOptional.isPresent()){
             return new ResponseEntity<>(new Message("El turno no existe",TypesResponse.ERROR),HttpStatus.NOT_FOUND);
         }
+        if(dto.getTurno().length() > 20) {
+            return new ResponseEntity<>(new Message("El turno excede el número de caracteres", TypesResponse.WARNING), HttpStatus.BAD_REQUEST);
+        }
+
         Turno turno = turnoOptional.get();
         turno.setTurno(dto.getTurno());
+        turno = turnoRepository.saveAndFlush(turno);
         if(turno == null){
             return new ResponseEntity<>(new Message("El turno no se actualizó",TypesResponse.ERROR),HttpStatus.BAD_REQUEST);
         }
@@ -83,19 +110,20 @@ public class TurnoService {
             return new ResponseEntity<>(new Message("El turno no existe", TypesResponse.ERROR), HttpStatus.NOT_FOUND);
         }
         Turno turno = turnoOptional.get();
-        turno.setStatus(!turno.isStatus());
-        turno = turnoRepository.saveAndFlush(turno);
-        if (turno == null) {
-            return new ResponseEntity<>(new Message("El estado del turno no se actualizó", TypesResponse.ERROR), HttpStatus.BAD_REQUEST);
-        }
+        Turno turnoNew = turnoOptional.get();
+        turnoNew.setStatus(!turno.isStatus());
+        turnoRepository.save(turnoNew);
+//        if (turno == null) {
+//            return new ResponseEntity<>(new Message("El estado del turno no se actualizó", TypesResponse.ERROR), HttpStatus.BAD_REQUEST);
+//        }
         logger.info("El estado del turno se actualizó correctamente");
         return new ResponseEntity<>(new Message(turno, "Estado del turno actualizado correctamente", TypesResponse.SUCCESS), HttpStatus.OK);
     }
 
-    @Transactional(readOnly = true)
-    public ResponseEntity<Message> findActives() {
-        List<Turno> respuestas = turnoRepository.findAllByStatusIsTrue();
-        logger.info("Lista de turnos activos");
-        return new ResponseEntity<>(new Message(respuestas, "Turnos con status activo", TypesResponse.SUCCESS), HttpStatus.OK);
-    }
+//    @Transactional(readOnly = true)
+//    public ResponseEntity<Message> findActives() {
+//        List<Turno> respuestas = turnoRepository.findAllByStatusIsTrue();
+//        logger.info("Lista de turnos activos");
+//        return new ResponseEntity<>(new Message(respuestas, "Turnos con status activo", TypesResponse.SUCCESS), HttpStatus.OK);
+//    }
 }

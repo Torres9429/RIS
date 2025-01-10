@@ -1,8 +1,6 @@
 package utez.edu.mx.systemris.turno.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import utez.edu.mx.systemris.doctor.model.Doctor;
 import utez.edu.mx.systemris.enfermera.model.Enfermera;
 
@@ -16,22 +14,19 @@ public class Turno {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "El turno es obligatorio")
     @Column(name = "turno", columnDefinition = "VARCHAR(20)")
     private String turno;
 
     @Column(name = "status", columnDefinition = "BOOL DEFAULT TRUE")
-    private boolean status = true;
+    private boolean status;
 
+    @ManyToOne
+    @JoinColumn(name = "doctor_id")
+    private Doctor doctores;
 
-    @OneToMany(mappedBy = "turno")
-    @JsonIgnore
-    private List<Doctor> doctores;
-
-
-    @OneToMany(mappedBy = "turno")
-    @JsonIgnore
-    private List<Enfermera> enfermeras;
+    @ManyToOne
+    @JoinColumn(name = "enfermera_id")
+    private Enfermera enfermeras;
 
     public Turno() {
     }
@@ -73,5 +68,21 @@ public class Turno {
 
     public void setStatus(boolean status) {
         this.status = status;
+    }
+
+    public Doctor getDoctores() {
+        return doctores;
+    }
+
+    public void setDoctores(Doctor doctores) {
+        this.doctores = doctores;
+    }
+
+    public Enfermera getEnfermeras() {
+        return enfermeras;
+    }
+
+    public void setEnfermeras(Enfermera enfermeras) {
+        this.enfermeras = enfermeras;
     }
 }

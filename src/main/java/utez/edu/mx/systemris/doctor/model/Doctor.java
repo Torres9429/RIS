@@ -1,8 +1,11 @@
 package utez.edu.mx.systemris.doctor.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import utez.edu.mx.systemris.turno.model.Turno;
+
+import java.util.List;
 
 @Entity
 @Table(name = "doctores")
@@ -11,32 +14,28 @@ public class Doctor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "El nombre es obligatorio")
     @Column(name = "nombre", columnDefinition = "VARCHAR(70)")
     private String nombre;
 
-    @NotBlank(message = "Los apellidos son obligatorios")
     @Column(name = "apellidos", columnDefinition = "VARCHAR(70)")
     private String apellidos;
 
-    @NotBlank(message = "La cédula obligatoria")
     @Column(name = "cedula", columnDefinition = "VARCHAR(30)")
     private String cedula;
 
-    @NotBlank(message = "La especialidad es obligatoria")
     @Column(name = "especialidad", columnDefinition = "VARCHAR(50)")
     private String especialidad;
 
-    @NotBlank(message = "El consultorio asignado es obligatorio")
     @Column(name = "consultorio", columnDefinition = "VARCHAR(50)")
     private String consultorio;
 
     @Column(name = "status", columnDefinition = "BOOL DEFAULT TRUE")
-    private boolean status = true;
+    private boolean status;
 
-    @ManyToOne
-    @JoinColumn(name = "turno_id")
-    private Turno turno;
+
+    @OneToMany(mappedBy = "doctores")
+    @JsonIgnore
+    private List<Turno> turnos;
 
     public Doctor() {
     }
@@ -58,6 +57,14 @@ public class Doctor {
         this.especialidad = especialidad;
         this.consultorio = consultorio;
         this.status = status;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getNombre() {

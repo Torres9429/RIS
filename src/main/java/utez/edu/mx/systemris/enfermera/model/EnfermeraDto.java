@@ -22,14 +22,6 @@ public class EnfermeraDto {
     public EnfermeraDto() {
     }
 
-    public EnfermeraDto(Long id, String nombre, String apellidos, String areaTrabajo, int aniosExperiencia) {
-        this.id = id;
-        this.nombre = nombre;
-        this.apellidos = apellidos;
-        this.areaTrabajo = areaTrabajo;
-        this.aniosExperiencia = aniosExperiencia;
-    }
-
     public Long getId() {
         return id;
     }

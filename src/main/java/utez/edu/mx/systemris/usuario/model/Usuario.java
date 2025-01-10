@@ -1,5 +1,6 @@
 package utez.edu.mx.systemris.usuario.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -48,13 +49,13 @@ public class Usuario {
 //    @ManyToMany
 //    @JsonIgnore
 //
-//    @ManyToMany
-//    @JsonIgnore
-//    @JoinTable(
-//            name = "usuario_role",
-//            joinColumns = @JoinColumn(name = "usuario_id"),
-//            inverseJoinColumns = @JoinColumn(name = "role_id")
-//    )
+    @ManyToMany
+    @JsonIgnore
+    @JoinTable(
+            name = "usuario_role",
+            joinColumns = @JoinColumn(name = "usuario_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
     private Set<Role> roles = new HashSet<>();
 
 //    public Usuario(String correo, String contrasena) {

@@ -18,13 +18,14 @@ import java.util.Optional;
 
 @Service
 public class DoctorService {
-    private static final Logger logger = LoggerFactory.getLogger(DoctorService.class);
+    Logger logger = LoggerFactory.getLogger(DoctorService.class);
 
     private final DoctorRepository doctorRepository;
 
     public DoctorService(DoctorRepository doctorRepository) {
         this.doctorRepository = doctorRepository;
     }
+
     @Transactional(readOnly = true)
     public ResponseEntity<Message> findAll() {
         List<Doctor> doctores = doctorRepository.findAll();
@@ -98,7 +99,7 @@ public class DoctorService {
         doctor.setEspecialidad(dto.getEspecialidad());
         doctor.setConsultorio(dto.getConsultorio());
         doctor = doctorRepository.saveAndFlush(doctor);
-        if(doctor == null){
+        if(doctor.getId() == null){
             return new ResponseEntity<>(new Message("El doctor no se actualizó",TypesResponse.ERROR),HttpStatus.BAD_REQUEST);
         }
         logger.info("La actualización ha sido realizada correctamente");
@@ -112,20 +113,22 @@ public class DoctorService {
         if (!doctorOptional.isPresent()) {
             return new ResponseEntity<>(new Message("El usuario no existe", TypesResponse.ERROR), HttpStatus.NOT_FOUND);
         }
+
         Doctor doctor = doctorOptional.get();
-        doctor.setStatus(!doctor.isStatus());
-        doctor = doctorRepository.saveAndFlush(doctor);
-        if (doctor == null) {
-            return new ResponseEntity<>(new Message("El estado del usuario no se actualizó", TypesResponse.ERROR), HttpStatus.BAD_REQUEST);
-        }
+        Doctor doctorNew = doctorOptional.get();
+        doctorNew.setStatus(!doctor.isStatus());
+        doctorRepository.save(doctorNew);
+//        if (doctorNew == null) {
+//            return new ResponseEntity<>(new Message("El estado del usuario no se actualizó", TypesResponse.ERROR), HttpStatus.BAD_REQUEST);
+//        }
         logger.info("El estado del usuario se actualizó correctamente");
         return new ResponseEntity<>(new Message(doctor, "Estado del usuario actualizado correctamente", TypesResponse.SUCCESS), HttpStatus.OK);
     }
 
-    @Transactional(readOnly = true)
-    public ResponseEntity<Message> findActives() {
-        List<Doctor> respuestas = doctorRepository.findAllByStatusIsTrue();
-        logger.info("Lista de doctores activos");
-        return new ResponseEntity<>(new Message(respuestas, "Doctores con status activo", TypesResponse.SUCCESS), HttpStatus.OK);
-    }
+//    @Transactional(readOnly = true)
+//    public ResponseEntity<Message> findActives() {
+//        List<Doctor> respuestas = doctorRepository.findAllByStatusIsTrue();
+//        logger.info("Lista de doctores activos");
+//        return new ResponseEntity<>(new Message(respuestas, "Doctores con status activo", TypesResponse.SUCCESS), HttpStatus.OK);
+//    }
 }
