@@ -18,7 +18,6 @@ public class MedicamentoController {
     @GetMapping("/all")
     public ResponseEntity<Message> findAllInsumo(){
         return medicamentoService.findAll();
-
     }
     @GetMapping("/{id}")
     public ResponseEntity<Message> findInsumoById(@PathVariable long id){
@@ -28,11 +27,11 @@ public class MedicamentoController {
     public ResponseEntity<Message> saveMedicamento(@RequestBody MedicamentoDto medicamentoDto){
         return medicamentoService.saveMedicamento(medicamentoDto);
     }
-    @PostMapping("/update")
+    @PutMapping("/update")
     public ResponseEntity<Message> updateInsumo(@RequestBody MedicamentoDto medicamentoDto){
         return medicamentoService.updateMedicamento(medicamentoDto);
     }
-    @PutMapping("/Status")
+    @PutMapping("/change-status")
     public ResponseEntity<Message> updateStatus(@RequestBody MedicamentoDto medicamentoDto){
         return medicamentoService.updateMedicamento(medicamentoDto);
     }

@@ -6,14 +6,11 @@ import utez.edu.mx.systemris.medicamento.model.Medicamento;
 import java.util.List;
 
 @Entity
-@Table(name = "insumo")
+@Table(name = "insumos")
 public class Insumo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToOne
-    @JoinColumn(name = "medicamento_id")
-    private Medicamento medicamentos;
     @Column(name="stock",columnDefinition = "INT")
     private int stock;
     @Column(name="descripcion",columnDefinition = "VARCHAR(80)")
@@ -21,9 +18,12 @@ public class Insumo {
     @Column(name="status",columnDefinition = "BOOL")
     private boolean status;
 
-    public Insumo(Long id, Medicamento medicamentos, int stock, String descripcion, boolean status) {
+    @ManyToOne
+    @JoinColumn(name = "medicamento_id", nullable = false)
+    private Medicamento medicamentos;
+
+    public Insumo(Long id, int stock, String descripcion, boolean status) {
         this.id = id;
-        this.medicamentos = medicamentos;
         this.stock = stock;
         this.descripcion = descripcion;
         this.status = status;
@@ -32,15 +32,16 @@ public class Insumo {
     public Insumo() {
     }
 
-    public Insumo(Medicamento medicamentos, int stock, String descripcion, boolean status) {
-        this.medicamentos = medicamentos;
+    public Insumo(int stock, String descripcion, boolean status) {
         this.stock = stock;
         this.descripcion = descripcion;
         this.status = status;
     }
 
-    public Insumo(boolean status, String descripcion, int stock, Long medicamentoId) {
-
+    public Insumo(boolean status, String descripcion, int stock) {
+        this.stock = stock;
+        this.descripcion = descripcion;
+        this.status = status;
     }
 
     public Long getId() {
@@ -50,16 +51,6 @@ public class Insumo {
     public void setId(Long id) {
         this.id = id;
     }
-
-    public Medicamento getMedicamentos() {
-
-        return medicamentos;
-    }
-
-    public void setMedicamentos(Medicamento medicamentos) {
-        this.medicamentos = medicamentos;
-    }
-
 
     public int getStock() {
         return stock;
@@ -85,4 +76,11 @@ public class Insumo {
         this.status = status;
     }
 
+    public Medicamento getMedicamentos() {
+        return medicamentos;
+    }
+
+    public void setMedicamentos(Medicamento medicamentos) {
+        this.medicamentos = medicamentos;
+    }
 }

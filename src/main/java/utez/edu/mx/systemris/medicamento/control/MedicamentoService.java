@@ -21,7 +21,7 @@ import java.util.Optional;
 @Service
 @Transactional
 public class MedicamentoService {
-    private final static Logger logger = LoggerFactory.getLogger(MedicamentoService.class);
+    Logger logger = LoggerFactory.getLogger(MedicamentoService.class);
     private final MedicamentoRepository medicamentoRepository;
 
     @Autowired
@@ -32,7 +32,7 @@ public class MedicamentoService {
     @Transactional(readOnly = true)
     public ResponseEntity<Message> findAll() {
         List<Medicamento> insumos = medicamentoRepository.findAll();
-        logger.info("Busqueda de Medicamento exitoso");
+        logger.info("Búsqueda de medicamento exitoso");
         return new ResponseEntity<>(new Message(insumos, "Lista de medicamentos", TypesResponse.SUCCESS), HttpStatus.OK);
     }
 
@@ -51,7 +51,12 @@ public class MedicamentoService {
 
     @Transactional(rollbackFor = {SQLException.class})
     public ResponseEntity<Message> saveMedicamento(MedicamentoDto medicamentoDto) {
-
+        if(medicamentoDto.getMedicamento().length() > 30){
+            return  new ResponseEntity<>(new Message(medicamentoDto, "El nombre del medicamento excede el número de caracteres", TypesResponse.WARNING), HttpStatus.BAD_REQUEST);
+        }
+        if(medicamentoDto.getDescripcion().length() > 50){
+            return  new ResponseEntity<>(new Message(medicamentoDto, "La descripción excede el número de caracteres", TypesResponse.WARNING), HttpStatus.BAD_REQUEST);
+        }
         Medicamento medicamento = new Medicamento(medicamentoDto.getMedicamento(), medicamentoDto.getPrecio(), medicamentoDto.getDescripcion());
         medicamento = medicamentoRepository.saveAndFlush(medicamento);
         if (medicamento == null) {
@@ -65,27 +70,29 @@ public class MedicamentoService {
     @Transactional(rollbackFor = {SQLException.class})
     public ResponseEntity<Message> updateMedicamento(MedicamentoDto medicamentoDto) {
         Optional<Medicamento> insumoOptional = medicamentoRepository.findById(medicamentoDto.getId());
+        Medicamento insumo = insumoOptional.get();
         if (!insumoOptional.isPresent()) {
             return new ResponseEntity<>(new Message("el medicamento no fue encontrado", TypesResponse.ERROR), HttpStatus.BAD_REQUEST);
 
         }
-        if (medicamentoDto.getDescripcion().length() > 80) {
-            return new ResponseEntity<>(new Message(medicamentoDto, "la descripcion sobrepasa el numero de caracteres", TypesResponse.WARNING), HttpStatus.BAD_REQUEST);
+        if(medicamentoDto.getMedicamento().length() > 30){
+            return  new ResponseEntity<>(new Message(medicamentoDto, "El nombre del medicamento excede el número de caracteres", TypesResponse.WARNING), HttpStatus.BAD_REQUEST);
         }
-        Medicamento medicamento = medicamentoRepository.findById(medicamentoDto.getMedicamento()).orElse(null);
-        Medicamento insumo = insumoOptional.get();
-        insumo.setDescripcion(medicamentoDto.getDescripcion());
-        insumo.setMedicamento(medicamento);
+        if(medicamentoDto.getDescripcion().length() > 50){
+            return  new ResponseEntity<>(new Message(medicamentoDto, "La descripción excede el número de caracteres", TypesResponse.WARNING), HttpStatus.BAD_REQUEST);
+        }
+        insumo.setMedicamento(medicamentoDto.getMedicamento());
         insumo.setPrecio(medicamentoDto.getPrecio());
+        insumo.setDescripcion(medicamentoDto.getDescripcion());
+
         insumo = medicamentoRepository.saveAndFlush(insumo);
-        if (insumo == null) {
+
+        if (insumo.getId() == null) {
             return new ResponseEntity<>(new Message("El medicamento no se pudo actualizar", TypesResponse.ERROR), HttpStatus.BAD_REQUEST);
         }
         logger.info("El registro ha sido actualizado correctamente");
         return new ResponseEntity<>(new Message(insumo, "El medicamento se Actualizo correctamente", TypesResponse.SUCCESS), HttpStatus.OK);
 
     }
-
-
 }
 
