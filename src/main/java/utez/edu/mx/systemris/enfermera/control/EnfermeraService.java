@@ -67,7 +67,7 @@ public class EnfermeraService {
     public ResponseEntity<Message> update(EnfermeraDto dto) {
         Optional<Enfermera> enfermeraOptional = enfermeraRepository.findById(dto.getId());
         if(!enfermeraOptional.isPresent()){
-            return new ResponseEntity<>(new Message("El doctor no existe",TypesResponse.ERROR),HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(new Message("La enfermera no existe",TypesResponse.ERROR),HttpStatus.NOT_FOUND);
         }
         if(dto.getNombre().length() > 70) {
             return new ResponseEntity<>(new Message("El nombre excede el número de caracteres",TypesResponse.WARNING),HttpStatus.BAD_REQUEST);
