@@ -16,10 +16,8 @@ public class FacturaDto {
     private String concepto;
     @NotNull(groups = {Register.class,Modify.class},message = "El total no puede quedar vacío")
     private double total;
-    @NotNull(groups = {FacturaDto.Modify.class, FacturaDto.ChangeStatus.class},message = "El id del cliente no puede ser nulo")
-    private Long doctorId;
-    @NotNull(groups = {FacturaDto.Modify.class, FacturaDto.ChangeStatus.class},message = "El id de la categoría no puede ser nulo")
-    private Long enfermeraId;
+    @NotNull(groups = {Register.class, Modify.class}, message = "El id de la factura no puede quedar vacío")
+    private Long facturaId;
     public FacturaDto() {
     }
 
@@ -54,21 +52,11 @@ public class FacturaDto {
     public void setTotal(double total) {
         this.total = total;
     }
-
-    public Long getDoctorId() {
-        return doctorId;
+    public Long getFacturaId() {
+        return facturaId;
     }
-
-    public void setDoctorId(Long doctorId) {
-        this.doctorId = doctorId;
-    }
-
-    public Long getEnfermeraId() {
-        return enfermeraId;
-    }
-
-    public void setEnfermeraId(Long enfermeraId) {
-        this.enfermeraId = enfermeraId;
+    public void setFacturaId(Long facturaId) {
+        this.facturaId = facturaId;
     }
 
     public interface Register{}

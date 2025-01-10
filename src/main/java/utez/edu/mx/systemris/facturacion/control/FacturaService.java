@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 import utez.edu.mx.systemris.facturacion.model.Factura;
 import utez.edu.mx.systemris.facturacion.model.FacturaDto;
 import utez.edu.mx.systemris.facturacion.model.FacturaRepository;
+import utez.edu.mx.systemris.medicamento.model.Medicamento;
+import utez.edu.mx.systemris.medicamento.model.MedicamentoRepository;
 import utez.edu.mx.systemris.utils.Message;
 import utez.edu.mx.systemris.utils.TypesResponse;
 
@@ -22,9 +24,11 @@ import java.util.Optional;
 public class FacturaService {
     private final static Logger logger = LoggerFactory.getLogger(FacturaService.class);
     private final FacturaRepository facturaRepository;
+    private final MedicamentoRepository medicamentoRepository;
     @Autowired
-    public FacturaService(FacturaRepository facturaRepository){
+    public FacturaService(FacturaRepository facturaRepository, MedicamentoRepository medicamentoRepository) {
         this.facturaRepository = facturaRepository;
+        this.medicamentoRepository = medicamentoRepository;
     }
 
     @Transactional(readOnly = true)
@@ -44,26 +48,17 @@ public class FacturaService {
             return new ResponseEntity<>(new Message(null,"Factura no encontrada",TypesResponse.ERROR), HttpStatus.BAD_REQUEST);
         }
     }
-    @Transactional(rollbackFor = {SQLException.class})
-    public ResponseEntity<Message> saveFactura(FacturaDto facturaDto){
-        if (facturaDto.getConcepto().length() > 50){
-            return new ResponseEntity<>(new Message(facturaDto,"El concepto sobrepasa el numero de caracteres",TypesResponse.WARNING),HttpStatus.BAD_REQUEST);
+    @Transactional(rollbackFor = {SQLException.class}) public ResponseEntity<Message> saveFactura(FacturaDto facturaDto) {
+        if (facturaDto.getConcepto().length() > 50) {
+            return new ResponseEntity<>(new Message(facturaDto, "El concepto sobrepasa el número de caracteres", TypesResponse.WARNING), HttpStatus.BAD_REQUEST);
         }
-        Doctor doctor = doctorRepository.findById(facturaDto.getDoctorId()).orElse(null)
-        Factura factura = new Factura(facturaDto.getFecha_factura(),facturaDto.getConcepto(), facturaDto.getTotal());
-        factura.setDoctor();
+        Medicamento medicamento = medicamentoRepository.findById(facturaDto.getFacturaId()).orElse(null);
+        if (medicamento == null) {
+            return new ResponseEntity<>(new Message(null, "Medicamento no encontrado", TypesResponse.ERROR), HttpStatus.BAD_REQUEST);
+        }
+        Factura factura = new Factura(facturaDto.getFecha_factura(), facturaDto.getTotal(), List.of(medicamento));
+        facturaRepository.save(factura);
+        logger.info("Factura registrada correcatamente");
+        return new ResponseEntity<>(new Message(factura, "Factura guardada correctamente", TypesResponse.SUCCESS), HttpStatus.OK);
     }
-    @Transactional(rollbackFor = {SQLException.class})
-    public ResponseEntity<Message> updateFactura(FacturaDto facturaDto){
-        Optional<Factura> facturaOptional = facturaRepository.findById(facturaDto.getId());
-        if (!facturaOptional.isPresent()){
-            return new ResponseEntity<>(new Message("La factura no fue encontrada",TypesResponse.ERROR),HttpStatus.BAD_REQUEST);
-        }
-        if (facturaDto.getConcepto().length() > 50){
-            return new ResponseEntity<>(new Message(facturaDto,"El concepto sobrepasa el numero de caracteres",TypesResponse.WARNING),HttpStatus.BAD_REQUEST);
-        }
-        Factura factura = facturaOptional.get();
-        factura.setFecha_factura();
-    }
-
 }

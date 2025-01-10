@@ -27,6 +27,4 @@ public class FacturaController {
     public ResponseEntity<Message> saveFactura(@RequestBody FacturaDto facturaDto){
         return facturaService.saveFactura(facturaDto);
     }
-    @PutMapping("/update")
-    public ResponseEntity<Message>
 }

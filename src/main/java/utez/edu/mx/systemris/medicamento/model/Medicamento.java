@@ -2,6 +2,7 @@ package utez.edu.mx.systemris.medicamento.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import utez.edu.mx.systemris.facturacion.model.Factura;
 import utez.edu.mx.systemris.insumo.model.Insumo;
 
 import java.util.List;
@@ -22,6 +23,9 @@ public class Medicamento {
     @OneToMany(mappedBy = "medicamentos")
     @JsonIgnore
     private List<Insumo> insumos;
+    @ManyToOne
+    @JoinColumn(name = "factura_id", nullable = false)
+    private Factura factura;
 
     public Medicamento(Long id, String medicamento, String descripcion, Double precio) {
         this.id = id;
