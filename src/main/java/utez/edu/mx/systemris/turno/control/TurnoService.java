@@ -76,6 +76,22 @@ public class TurnoService {
         return new ResponseEntity<>(new Message(turno,"El turno se actualizó correctamente",TypesResponse.SUCCESS),HttpStatus.OK);
     }
 
+    @Transactional(rollbackFor = {SQLException.class})
+    public ResponseEntity<Message> changeStatus(TurnoDto dto) {
+        Optional<Turno> turnoOptional = turnoRepository.findById(dto.getId());
+        if (!turnoOptional.isPresent()) {
+            return new ResponseEntity<>(new Message("El turno no existe", TypesResponse.ERROR), HttpStatus.NOT_FOUND);
+        }
+        Turno turno = turnoOptional.get();
+        turno.setStatus(!turno.isStatus());
+        turno = turnoRepository.saveAndFlush(turno);
+        if (turno == null) {
+            return new ResponseEntity<>(new Message("El estado del turno no se actualizó", TypesResponse.ERROR), HttpStatus.BAD_REQUEST);
+        }
+        logger.info("El estado del turno se actualizó correctamente");
+        return new ResponseEntity<>(new Message(turno, "Estado del turno actualizado correctamente", TypesResponse.SUCCESS), HttpStatus.OK);
+    }
+
     @Transactional(readOnly = true)
     public ResponseEntity<Message> findActives() {
         List<Turno> respuestas = turnoRepository.findAllByStatusIsTrue();

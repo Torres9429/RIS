@@ -3,7 +3,6 @@ package utez.edu.mx.systemris.turno.control;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import utez.edu.mx.systemris.turno.control.TurnoService;
 import utez.edu.mx.systemris.turno.model.TurnoDto;
 import utez.edu.mx.systemris.utils.Message;
 
@@ -41,5 +40,10 @@ public class TurnoController {
     @PutMapping("/changeStatus")
     public ResponseEntity<Message> changeStatus(@RequestBody TurnoDto turnoDto) {
         return turnoService.changeStatus(turnoDto);
+    }
+
+    @GetMapping("/actives")
+    public ResponseEntity<Message> findActives() {
+        return turnoService.findActives();
     }
 }
