@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import utez.edu.mx.systemris.insumo.model.Insumo;
 import utez.edu.mx.systemris.insumo.model.InsumoDto;
 import utez.edu.mx.systemris.insumo.model.InsumoRepository;
+import utez.edu.mx.systemris.medicamento.model.Medicamento;
+import utez.edu.mx.systemris.medicamento.model.MedicamentoRepository;
 import utez.edu.mx.systemris.utils.Message;
 import utez.edu.mx.systemris.utils.TypesResponse;
 import org.slf4j.Logger;
@@ -25,9 +27,12 @@ import java.util.Optional;
 public class InsumoService {
     private final static Logger logger = LoggerFactory.getLogger(InsumoService.class);
     private final InsumoRepository insumoRepository;
+    private final MedicamentoRepository medicamentoRepository;
+
     @Autowired
-    public InsumoService(InsumoRepository insumoRepository) {
+    public InsumoService(InsumoRepository insumoRepository, MedicamentoRepository medicamentoRepository) {
         this.insumoRepository = insumoRepository;
+        this.medicamentoRepository = medicamentoRepository;
     }
     @Transactional(readOnly = true)
     public ResponseEntity<Message>findAll(){
@@ -55,13 +60,11 @@ public class InsumoService {
     }
     @Transactional(rollbackFor = {SQLException.class})
     public ResponseEntity<Message>saveInsumo(InsumoDto insumoDto){
-        if(insumoDto.getInsumo().length()>30){
-            return new ResponseEntity<>(new Message(insumoDto,"el insumo sobrepasa el numero de caracteres",TypesResponse.WARNING),HttpStatus.BAD_REQUEST);
-        }
+
         if(insumoDto.getDescripcion().length()>80){
             return new ResponseEntity<>(new Message(insumoDto,"la descripcion sobrepasa el numero de caracteres",TypesResponse.WARNING),HttpStatus.BAD_REQUEST);
         }
-        Insumo insumo = new Insumo(insumoDto.isStatus(),insumoDto.getDescripcion(),insumoDto.getStock(),insumoDto.getInsumo());
+        Insumo insumo = new Insumo(insumoDto.isStatus(),insumoDto.getDescripcion(),insumoDto.getStock(),insumoDto.getMedicamentoId());
         insumo= insumoRepository.saveAndFlush(insumo);
         if(insumo == null){
             return new ResponseEntity<>(new Message("El insumo no se registró",TypesResponse.ERROR),HttpStatus.BAD_REQUEST);
@@ -80,10 +83,11 @@ public class InsumoService {
         if(insumoDto.getDescripcion().length()>80){
             return new ResponseEntity<>(new Message(insumoDto,"la descripcion sobrepasa el numero de caracteres",TypesResponse.WARNING),HttpStatus.BAD_REQUEST);
         }
+        Medicamento medicamento = medicamentoRepository.findById(insumoDto.getMedicamentoId()).orElse(null);
         Insumo insumo = insumoOptional.get();
         insumo.setDescripcion(insumoDto.getDescripcion());
         insumo.setStock(insumoDto.getStock());
-        insumo.setInsumo(insumoDto.getInsumo());
+        insumo.setMedicamentos(medicamento);
         insumo= insumoRepository.saveAndFlush(insumo);
         if(insumo == null){
             return new ResponseEntity<>(new Message("El insumo no se pudo actualizar",TypesResponse.ERROR),HttpStatus.BAD_REQUEST);

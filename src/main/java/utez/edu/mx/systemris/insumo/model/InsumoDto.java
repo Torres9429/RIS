@@ -9,7 +9,7 @@ public class InsumoDto{
     @NotBlank(groups = {Register.class,Modify.class},message = "la descripcion no puede quedar vacio ")
     private String descripcion;
     @NotBlank(groups = {Register.class,Modify.class},message = "el insumo no puede quedar vacio")
-    private String insumo;
+    private Long medicamentoId;
     @NotNull(groups = {Modify.class,Register.class},message = "el stock no puede quedar vacio")
     private int stock;
     @NotNull(groups = {Modify.class,ChangeStatus.class,Register.class},message = "el estado no puede ser vacio")
@@ -19,12 +19,12 @@ public class InsumoDto{
 
     }
 
-    public String getInsumo() {
-        return insumo;
+    public Long getMedicamentoId() {
+        return medicamentoId;
     }
 
-    public void setInsumo(String insumo) {
-        this.insumo = insumo;
+    public void setMedicamentoId(Long medicamentoId) {
+        this.medicamentoId = medicamentoId;
     }
 
     public String getDescripcion(){
