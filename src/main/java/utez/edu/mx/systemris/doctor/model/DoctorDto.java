@@ -26,15 +26,6 @@ public class DoctorDto {
     public DoctorDto() {
     }
 
-    public DoctorDto(Long id, String nombre, String apellidos, String cedula, String especialidad, String consultorio) {
-        this.id = id;
-        this.nombre = nombre;
-        this.apellidos = apellidos;
-        this.cedula = cedula;
-        this.especialidad = especialidad;
-        this.consultorio = consultorio;
-    }
-
     public Long getId() {
         return id;
     }
