@@ -58,16 +58,22 @@ public class InsumoService {
         logger.info("Busqueda de Insumos activos exitoso");
         return new ResponseEntity<>(new Message(insumos,"Lista de insumos activos", TypesResponse.SUCCESS), HttpStatus.OK);
     }
+
     @Transactional(rollbackFor = {SQLException.class})
     public ResponseEntity<Message>saveInsumo(InsumoDto insumoDto){
-
         if(insumoDto.getDescripcion().length()>80){
             return new ResponseEntity<>(new Message(insumoDto,"la descripcion sobrepasa el numero de caracteres",TypesResponse.WARNING),HttpStatus.BAD_REQUEST);
         }
-        Insumo insumo = new Insumo(insumoDto.isStatus(),insumoDto.getDescripcion(),insumoDto.getStock(),insumoDto.getMedicamentoId());
-        insumo= insumoRepository.saveAndFlush(insumo);
+        Medicamento medicamento = medicamentoRepository.findById(insumoDto.getMedicamentoId()).orElse(null);
+        if(medicamento == null){
+            return new ResponseEntity<>(new Message("No se encontró el medicamento para el stock de insumos",TypesResponse.ERROR),HttpStatus.BAD_REQUEST);
+        }
+
+        Insumo insumo = new Insumo(insumoDto.getStock(), insumoDto.getDescripcion(),true);
+        insumo.setMedicamentos(medicamento);
+        insumo = insumoRepository.saveAndFlush(insumo);
         if(insumo == null){
-            return new ResponseEntity<>(new Message("El insumo no se registró",TypesResponse.ERROR),HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(new Message("No se registró el insumo",TypesResponse.ERROR),HttpStatus.BAD_REQUEST);
         }
         logger.info("El registro ha sido realizado correctamente");
         return new ResponseEntity<>(new Message(insumo,"El insumo se registró correctamente",TypesResponse.SUCCESS),HttpStatus.CREATED);
@@ -110,9 +116,4 @@ public class InsumoService {
         logger.info("La actualización ha sido realizada correctamente");
         return new ResponseEntity<>(new Message(insumo,"El estado del insumo se actualizó correctamente",TypesResponse.SUCCESS),HttpStatus.OK);
     }
-
-
-
-
-
 }

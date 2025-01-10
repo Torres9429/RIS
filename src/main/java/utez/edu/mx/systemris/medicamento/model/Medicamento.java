@@ -1,7 +1,10 @@
 package utez.edu.mx.systemris.medicamento.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import utez.edu.mx.systemris.insumo.model.Insumo;
+
+import java.util.List;
 
 @Entity
 @Table(name = "medicamentos")
@@ -9,23 +12,25 @@ public class Medicamento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    /*@Column(name = "medicamento", columnDefinition = "VARCHAR(30)")
-    private String medicamento;*/
+    @Column(name = "medicamento", columnDefinition = "VARCHAR(30)")
+    private String medicamento;
     @Column(name = "precio", columnDefinition = "DOUBLE")
     private Double precio;
     @Column(name = "descripcion", columnDefinition = "VARCHAR(50)")
     private String descripcion;
-    @OneToOne(mappedBy = "medicamentos", cascade = CascadeType.ALL)
-    private Insumo medicamento;
 
-    public Medicamento(Long id, String descripcion, Double precio, Insumo medicamento) {
+    @OneToMany(mappedBy = "medicamentos")
+    @JsonIgnore
+    private List<Insumo> insumos;
+
+    public Medicamento(Long id, String medicamento, String descripcion, Double precio) {
         this.id = id;
-        this.descripcion = descripcion;
-        this.precio = precio;
         this.medicamento = medicamento;
+        this.precio = precio;
+        this.descripcion = descripcion;
     }
 
-    public Medicamento(Long medicamento, Double precio, String descripcion) {
+    public Medicamento(String medicamento, Double precio, String descripcion) {
         this.medicamento = medicamento;
         this.precio = precio;
         this.descripcion = descripcion;
@@ -34,11 +39,11 @@ public class Medicamento {
     public Medicamento() {
     }
 
-    public Medicamento(Insumo medicamento, Double precio, String descripcion) {
+    /*public Medicamento(Insumo medicamento, Double precio, String descripcion) {
         this.medicamento = medicamento;
         this.precio = precio;
         this.descripcion = descripcion;
-    }
+    }*/
 
     public Long getId() {
         return id;

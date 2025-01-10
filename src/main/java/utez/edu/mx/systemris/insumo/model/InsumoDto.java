@@ -6,14 +6,12 @@ import jakarta.validation.constraints.NotNull;
 public class InsumoDto{
     @NotNull(groups = {Modify.class,ChangeStatus.class},message = "el id no puede quedar vacio")
     private Long id;
-    @NotBlank(groups = {Register.class,Modify.class},message = "la descripcion no puede quedar vacio ")
-    private String descripcion;
-    @NotBlank(groups = {Register.class,Modify.class},message = "el insumo no puede quedar vacio")
-    private Long medicamentoId;
     @NotNull(groups = {Modify.class,Register.class},message = "el stock no puede quedar vacio")
     private int stock;
-    @NotNull(groups = {Modify.class,ChangeStatus.class,Register.class},message = "el estado no puede ser vacio")
-    private boolean status;
+    @NotBlank(groups = {Register.class,Modify.class},message = "la descripcion no puede quedar vacio ")
+    private String descripcion;
+    @NotNull(groups = {Register.class,Modify.class},message = "el insumo no puede quedar vacio")
+    private Long medicamentoId;
 
     public InsumoDto() {
 
@@ -49,14 +47,6 @@ public class InsumoDto{
 
     public void setStock(int stock) {
         this.stock = stock;
-    }
-
-    public boolean isStatus() {
-        return status;
-    }
-
-    public void setStatus(boolean status) {
-        this.status = status;
     }
 
     public interface Register{}

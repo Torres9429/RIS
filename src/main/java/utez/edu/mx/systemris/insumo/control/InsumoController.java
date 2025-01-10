@@ -32,11 +32,11 @@ public class InsumoController {
     public ResponseEntity<Message> saveInsumo(@RequestBody InsumoDto insumoDto){
         return insumoService.saveInsumo(insumoDto);
     }
-    @PostMapping("/update")
+    @PutMapping("/update")
     public ResponseEntity<Message> updateInsumo(@RequestBody InsumoDto insumoDto){
         return insumoService.updateInsumo(insumoDto);
     }
-    @PutMapping("/Status")
+    @PutMapping("/change-status")
     public ResponseEntity<Message> updateStatus(@RequestBody InsumoDto insumoDto){
         return insumoService.updateInsumo(insumoDto);
     }
