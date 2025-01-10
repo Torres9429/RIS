@@ -42,8 +42,8 @@ public class TurnoController {
         return turnoService.changeStatus(turnoDto);
     }
 
-    @GetMapping("/actives")
-    public ResponseEntity<Message> findActives() {
-        return turnoService.findActives();
-    }
+//    @GetMapping("/actives")
+//    public ResponseEntity<Message> findActives() {
+//        return turnoService.findActives();
+//    }
 }
