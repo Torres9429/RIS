@@ -41,6 +41,7 @@ public class Factura {
     }
 
     public Factura(String concepto, double total, List<Medicamento> medicamentos) {
+        this.fecha_factura = new Date();
         this.concepto = concepto;
         this.total = total;
         this.medicamentos = medicamentos;
