@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import utez.edu.mx.systemris.doctor.model.Doctor;
 import utez.edu.mx.systemris.doctor.model.DoctorDto;
 import utez.edu.mx.systemris.doctor.model.DoctorRepository;
+import utez.edu.mx.systemris.turno.model.Turno;
+import utez.edu.mx.systemris.turno.model.TurnoRepository;
 import utez.edu.mx.systemris.utils.Message;
 import utez.edu.mx.systemris.utils.TypesResponse;
 
@@ -21,9 +23,11 @@ public class DoctorService {
     Logger logger = LoggerFactory.getLogger(DoctorService.class);
 
     private final DoctorRepository doctorRepository;
+    private final TurnoRepository turnoRepository;
 
-    public DoctorService(DoctorRepository doctorRepository) {
+    public DoctorService(DoctorRepository doctorRepository, TurnoRepository turnoRepository) {
         this.doctorRepository = doctorRepository;
+        this.turnoRepository = turnoRepository;
     }
 
     @Transactional(readOnly = true)
@@ -61,11 +65,12 @@ public class DoctorService {
         if(dto.getConsultorio().length() > 50) {
             return new ResponseEntity<>(new Message("El nombre del consultorio excede el número de caracteres",TypesResponse.WARNING),HttpStatus.BAD_REQUEST);
         }
-        Doctor doctor = new Doctor(dto.getNombre(), dto.getApellidos(), dto.getCedula(), dto.getEspecialidad(), dto.getConsultorio(), true);
+        Doctor doctor = new Doctor(dto.getNombre(), dto.getApellidos(), dto.getCedula(), dto.getEspecialidad(), dto.getConsultorio(), true, dto.getTurno());
         doctor = doctorRepository.saveAndFlush(doctor);
         if(doctor == null){
             return new ResponseEntity<>(new Message("El doctor no se registró",TypesResponse.ERROR),HttpStatus.BAD_REQUEST);
         }
+
         logger.info("El registro ha sido realizada correctamente");
         return new ResponseEntity<>(new Message(doctor,"El doctor se registró correctamente",TypesResponse.SUCCESS),HttpStatus.CREATED);
     }
@@ -98,6 +103,7 @@ public class DoctorService {
         doctor.setCedula(dto.getCedula());
         doctor.setEspecialidad(dto.getEspecialidad());
         doctor.setConsultorio(dto.getConsultorio());
+        doctor.setTurno(dto.getTurno());
         doctor = doctorRepository.saveAndFlush(doctor);
         if(doctor.getId() == null){
             return new ResponseEntity<>(new Message("El doctor no se actualizó",TypesResponse.ERROR),HttpStatus.BAD_REQUEST);

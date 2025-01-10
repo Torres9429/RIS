@@ -55,7 +55,7 @@ public class EnfermeraService {
         if (dto.getAreaTrabajo().length() > 70) {
             return new ResponseEntity<>(new Message("La área de trabajo excede el número de caracteres", TypesResponse.WARNING), HttpStatus.BAD_REQUEST);
         }
-        Enfermera enfermera = new Enfermera(dto.getNombre(), dto.getApellidos(), dto.getAreaTrabajo(), dto.getAniosExperiencia(), true);
+        Enfermera enfermera = new Enfermera(dto.getNombre(), dto.getApellidos(), dto.getAreaTrabajo(), dto.getAniosExperiencia(), true, dto.getTurno());
         enfermera = enfermeraRepository.saveAndFlush(enfermera);
         if (enfermera == null) {
             return new ResponseEntity<>(new Message("La enfermera no se registró", TypesResponse.ERROR), HttpStatus.BAD_REQUEST);
@@ -85,6 +85,7 @@ public class EnfermeraService {
         enfermera.setApellidos(dto.getApellidos());
         enfermera.setAreaTrabajo(dto.getAreaTrabajo());
         enfermera.setAniosExperiencia(dto.getAniosExperiencia());
+        enfermera.setTurno(dto.getTurno());
         enfermera = enfermeraRepository.saveAndFlush(enfermera);
         if (enfermera.getId() == null) {
             return new ResponseEntity<>(new Message("La enfermera no se actualizó", TypesResponse.ERROR), HttpStatus.BAD_REQUEST);

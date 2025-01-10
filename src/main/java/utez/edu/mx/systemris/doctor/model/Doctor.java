@@ -31,6 +31,8 @@ public class Doctor {
 
     @Column(name = "status", columnDefinition = "BOOL DEFAULT TRUE")
     private boolean status;
+    @Column(name = "turno",columnDefinition = "VARCHAR(25)")
+    private String turno;
 
 
     @OneToMany(mappedBy = "doctores")
@@ -57,6 +59,16 @@ public class Doctor {
         this.especialidad = especialidad;
         this.consultorio = consultorio;
         this.status = status;
+    }
+
+    public Doctor(String nombre, String apellidos, String cedula, String especialidad, String consultorio, boolean status, String turno) {
+        this.nombre = nombre;
+        this.apellidos = apellidos;
+        this.cedula = cedula;
+        this.especialidad = especialidad;
+        this.consultorio = consultorio;
+        this.status = true;
+        this.turno = turno;
     }
 
     public Long getId() {
@@ -113,5 +125,21 @@ public class Doctor {
 
     public void setStatus(boolean status) {
         this.status = status;
+    }
+
+    public List<Turno> getTurnos() {
+        return turnos;
+    }
+
+    public void setTurnos(List<Turno> turnos) {
+        this.turnos = turnos;
+    }
+
+    public String getTurno() {
+        return turno;
+    }
+
+    public void setTurno(String turno) {
+        this.turno = turno;
     }
 }

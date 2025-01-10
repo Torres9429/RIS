@@ -2,6 +2,7 @@ package utez.edu.mx.systemris.enfermera.model;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import utez.edu.mx.systemris.doctor.model.DoctorDto;
 
 public class EnfermeraDto {
     @NotNull(groups = {Modify.class, ChangeStatus.class}, message = "Es necesario el id")
@@ -18,6 +19,9 @@ public class EnfermeraDto {
 
     @NotNull(groups = {Modify.class, Register.class}, message = "Son necesarios los años de experiencia")
     private int aniosExperiencia;
+    @NotBlank(groups = {DoctorDto.Modify.class, DoctorDto.Register.class}, message = "Es necesario el turno")
+    private String turno;
+
 
     public EnfermeraDto() {
     }
@@ -61,7 +65,12 @@ public class EnfermeraDto {
     public void setAniosExperiencia(int aniosExperiencia) {
         this.aniosExperiencia = aniosExperiencia;
     }
-
+    public String getTurno() {
+        return turno;
+    }
+    public void setTurno(String turno) {
+        this.turno = turno;
+    }
     public interface Modify { }
     public interface ChangeStatus { }
     public interface Register { }

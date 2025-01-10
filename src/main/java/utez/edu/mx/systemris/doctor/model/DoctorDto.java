@@ -21,7 +21,8 @@ public class DoctorDto {
 
     @NotBlank(groups = {Modify.class, Register.class}, message = "Es necesario el consultorio")
     private String consultorio;
-
+    @NotBlank(groups = {Modify.class, Register.class}, message = "Es necesario el turno")
+    private String turno;
 
     public DoctorDto() {
     }
@@ -72,6 +73,14 @@ public class DoctorDto {
 
     public void setConsultorio(String consultorio) {
         this.consultorio = consultorio;
+    }
+
+    public String getTurno() {
+        return turno;
+    }
+
+    public void setTurno(String turno) {
+        this.turno = turno;
     }
 
     public interface Modify { }

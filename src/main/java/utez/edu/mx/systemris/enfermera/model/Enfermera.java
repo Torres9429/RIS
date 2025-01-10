@@ -27,12 +27,30 @@ public class Enfermera {
 
     @Column(name = "status", columnDefinition = "BOOL DEFAULT TRUE")
     private boolean status;
-
+    @Column(name = "turno",columnDefinition = "VARCHAR(25)")
+    private String turno;
     @OneToMany(mappedBy = "enfermeras")
     @JsonIgnore
     private List<Turno> turnos;
 
     public Enfermera() {
+    }
+
+    public Enfermera(String nombre, String apellidos, String areaTrabajo, int aniosExperiencia, boolean status, String turno) {
+        this.nombre = nombre;
+        this.apellidos = apellidos;
+        this.areaTrabajo = areaTrabajo;
+        this.aniosExperiencia = aniosExperiencia;
+        this.status = true;
+        this.turno = turno;
+    }
+
+    public Enfermera(String nombre, String apellidos, String areaTrabajo, int aniosExperiencia, String turno) {
+        this.nombre = nombre;
+        this.apellidos = apellidos;
+        this.areaTrabajo = areaTrabajo;
+        this.aniosExperiencia = aniosExperiencia;
+        this.turno = turno;
     }
 
     public Enfermera(Long id, String nombre, String apellidos, String areaTrabajo, int aniosExperiencia, boolean status) {
@@ -99,4 +117,13 @@ public class Enfermera {
     public void setStatus(boolean status) {
         this.status = status;
     }
+
+    public String getTurno() {
+        return turno;
+    }
+
+    public void setTurno(String turno) {
+        this.turno = turno;
+    }
+
 }
