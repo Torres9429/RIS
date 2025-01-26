@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Size;
 import utez.edu.mx.systemris.role.model.Role;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -46,9 +47,7 @@ public class Usuario {
 
     @Column(name = "code", columnDefinition = "VARCHAR(10)")
     private String code;
-//    @ManyToMany
-//    @JsonIgnore
-//
+
     @ManyToMany
     @JsonIgnore
     @JoinTable(
@@ -162,6 +161,7 @@ public class Usuario {
         this.status = status;
     }
 
+
     public Set<Role> getRoles() {
         return roles;
     }
@@ -170,5 +170,11 @@ public class Usuario {
         this.roles = roles;
     }
 
+    public String getCode() {
+        return code;
+    }
 
+    public void setCode(String code) {
+        this.code = code;
+    }
 }

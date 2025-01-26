@@ -1,11 +1,12 @@
 package utez.edu.mx.systemris.usuario.control;
 
-import  utez.edu.mx.systemris.usuario.model.UsuarioDto;
-import  utez.edu.mx.systemris.utils.Message;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import utez.edu.mx.systemris.usuario.model.UsuarioDto;
+import utez.edu.mx.systemris.utils.Message;
 
 
 @RestController
@@ -48,6 +49,27 @@ public class UsuarioController {
     @GetMapping("/actives")
     public ResponseEntity<Message> findActives() {
         return usuarioService.findActives();
+    }
+    @PostMapping("/send-email")
+    public ResponseEntity<Object> sendEmail(@Validated({UsuarioDto.FindByEmail.class}) @RequestBody UsuarioDto dto){
+        return usuarioService.sendEmail(dto);
+    }
+
+    @PostMapping("/verify-code")
+    public ResponseEntity<Object> verifyCode(@Validated({UsuarioDto.VerifyCode.class}) @RequestBody UsuarioDto dto){
+        return usuarioService.verifyCode(dto);
+    }
+    @PostMapping("/verify-password")
+    public ResponseEntity<Message> verifyPassword(@RequestBody UsuarioDto usuarioDto) {
+        return usuarioService.verifyPassword(usuarioDto);
+    }
+    @PutMapping("/change-password")
+    public ResponseEntity<Message> changePassword(@RequestBody UsuarioDto usuarioDto){
+        return usuarioService.cambiarContra(usuarioDto);
+    }
+    @PutMapping("/change-password-gral")
+    public ResponseEntity<Message> changePasswordUser(@RequestBody UsuarioDto usuarioDto){
+        return usuarioService.cambiarContraGral(usuarioDto);
     }
 
 
